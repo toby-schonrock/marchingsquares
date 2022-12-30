@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "GUI.hpp"
+#include "MarchingArea.hpp"
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
 #include "Vector2.hpp"
@@ -40,10 +41,7 @@ int main() {
     ImGuiIO& imguIO = ImGui::GetIO();
     imguIO.ConfigFlags &= ~ImGuiConfigFlags_NoMouseCursorChange; // disable cursor overide
 
-    // example circle
-    sf::CircleShape circle(0.5);
-    circle.setOrigin(circle.getRadius(), circle.getRadius());
-    circle.setPosition(gui.view.getCenter());
+    MarchingArea area({}, {20.0F, 20.0F}, {100, 100}, 0.1F);
 
     sf::Clock
         deltaClock; // for imgui - read https://eliasdaler.github.io/using-imgui-with-sfml-pt1/
@@ -64,18 +62,10 @@ int main() {
 
         ImGui::SFML::Update(window, deltaClock.restart()); // required for imgui-sfml
 
-        if ((unvisualize<float>(window.mapPixelToCoords(mousePixPos) - circle.getPosition()))
-                .mag() < circle.getRadius()) { // if hovering
-            circle.setFillColor(sf::Color::Green);
-            ImGui::SetTooltip("Welcome to SFML");
-        } else {
-            circle.setFillColor(sf::Color::White);
-        }
-
         // draw
         window.clear();
 
-        window.draw(circle);
+        area.draw(window);
         gui.frame(mousePixPos);
 
         ImGui::SFML::Render(window);

@@ -39,4 +39,5 @@ class Vector2 {
 };
 
 using Vec2  = Vector2<double>;
+using Vec2F = Vector2<float>;
 using Vec2I = Vector2<int>;
