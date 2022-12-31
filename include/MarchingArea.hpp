@@ -93,7 +93,7 @@ class MarchingArea {
         ImGui::DragFloat("Amp", &amp, 0.01F, 0.0F, 10000.0F);
         ImGui_DragUnsigned("Layers", &layers, 1.0F, 0, 10);
         ImGui::DragFloat("FreqMult", &freqMult, 0.01F, 0.0F, 10000.0F);
-        ImGui::DragFloat("AmpMult", &ampMult, 0.01F, 0.0F, 10000.0F);
+        ImGui::DragFloat("AmpMult", &ampMult, 0.01F, 0.0F, 1.0F);
         ImGui::End();
 
         for (std::size_t x = 0; x != resolution.x; ++x) {
