@@ -23,11 +23,7 @@ Vector2<To> unvisualize(const sf::Vector2<From>& v) {
 int main() {
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
-
-    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Window", sf::Style::Fullscreen,
-                            settings); //, sf::Style::Default);
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Window", sf::Style::Fullscreen); //, sf::Style::Default);
 
     GUI gui(desktop, window);
 
@@ -36,7 +32,7 @@ int main() {
     ImGuiIO& imguIO = ImGui::GetIO();
     imguIO.ConfigFlags &= ~ImGuiConfigFlags_NoMouseCursorChange; // disable cursor overide
 
-    MarchingArea area({}, {20.0F, 20.0F}, {1000, 2}, 0.01F);
+    MarchingArea area({}, {10.0F, 10.0F}, {500, 500});
 
     sf::Clock
         deltaClock; // for imgui - read https://eliasdaler.github.io/using-imgui-with-sfml-pt1/
@@ -58,9 +54,10 @@ int main() {
         ImGui::SFML::Update(window, deltaClock.restart()); // required for imgui-sfml
 
         area.updateNoise();
+        area.updateImage();
 
         // draw
-        window.clear();
+        window.clear(sf::Color(0, 1, 74, 255));
 
         area.draw(window);
         gui.frame(mousePixPos);
