@@ -7,6 +7,12 @@
 
 sf::Vector2f visualize(const Vec2& v);
 
+bool ImGui_DragUnsigned(const char* label, std::size_t* v, float v_speed = 1.0f,
+                        std::uint32_t v_min = 0, std::uint32_t v_max = 0, const char* format = "%d",
+                        ImGuiSliderFlags flags = 0) {
+    return ImGui::DragScalar(label, ImGuiDataType_U32, v, v_speed, &v_min, &v_max, format, flags);
+}
+
 class MarchingArea {
   private:
     std::vector<sf::Vertex> pointVerts;
@@ -77,30 +83,23 @@ class MarchingArea {
     }
 
     void updateNoise() {
-        static float freq1 = 4.0F;
-        static float amp1  = 5.0F;
-        static float freq2 = 10.0F;
-        static float amp2  = 2.5F;
+        static float       freq     = 2.0F;
+        static float       amp      = 2.0F;
+        static float       freqMult = 4.0F;
+        static float       ampMult  = 0.3F;
+        static std::size_t layers   = 4; // give it much mre and its way to easy to seg fault lol
         ImGui::Begin("Noise");
-        ImGui::DragFloat("Frequencey - 1", &freq1, 0.01F, 0.0F, 10000.0F);
-        ImGui::DragFloat("Amplitude - 1", &amp1, 0.01F, 0.0F, 10000.0F);
-        ImGui::DragFloat("Frequencey - 2", &freq2, 0.01F, 0.0F, 10000.0F);
-        ImGui::DragFloat("Amplitude - 2", &amp2, 0.01F, 0.0F, 10000.0F);
+        ImGui::DragFloat("Freq", &freq, 0.01F, 0.0F, 10000.0F);
+        ImGui::DragFloat("Amp", &amp, 0.01F, 0.0F, 10000.0F);
+        ImGui_DragUnsigned("Layers", &layers, 1.0F, 0, 10);
+        ImGui::DragFloat("FreqMult", &freqMult, 0.01F, 0.0F, 10000.0F);
+        ImGui::DragFloat("AmpMult", &ampMult, 0.01F, 0.0F, 10000.0F);
         ImGui::End();
 
         for (std::size_t x = 0; x != resolution.x; ++x) {
-            float n1 = (noise.noiseFunc(static_cast<float>(x) / static_cast<float>(resolution.x),
-                                        freq1, amp1) +
-                        amp1) /
-                       2.0F;
-            float n2 = (noise.noiseFunc(static_cast<float>(x) / static_cast<float>(resolution.x),
-                                        freq2, amp2) +
-                        amp2) /
-                       2.0F;
-            updatePos(x, {0.0F, n1 + n2});
-            sf::Uint8 r = static_cast<std::uint8_t>(((n1 + n2) / (amp1 + amp2)) * 255.0F);
-            sf::Uint8 g = 255 - r;
-            updateColor(x, {r, g, 0});
+            float n = noise.fractcalNoise(static_cast<float>(x) / static_cast<float>(resolution.x),
+                                          freq, amp, layers, freqMult, ampMult);
+            updatePos(x, {0.0F, n});
         }
     }
 

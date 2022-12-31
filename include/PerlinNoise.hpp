@@ -46,4 +46,15 @@ class PerlinNoise1D {
     }
 
     float noiseFunc(float p, float freq, float amp) const { return noise(p * freq) * amp; }
+
+    float fractcalNoise(float p, float freq, float amp, std::size_t count = 10,
+                        float freqMult = 2.0F, float ampMult = 0.5F) const {
+        float n = 0.0F;
+        for (std::size_t i = 0; i != count; ++i) {
+            n += noise(p * freq) * amp;
+            amp *= ampMult;
+            freq *= freqMult;
+        }
+        return n;
+    }
 };
