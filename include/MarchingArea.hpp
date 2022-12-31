@@ -83,21 +83,24 @@ class MarchingArea {
         static float amp2  = 2.5F;
         ImGui::Begin("Noise");
         ImGui::DragFloat("Frequencey - 1", &freq1, 0.01F, 0.0F, 10000.0F);
-        ImGui::DragFloat("Amplitude - 1", &amp1, 0.01F, -10000.0F, 10000.0F);
+        ImGui::DragFloat("Amplitude - 1", &amp1, 0.01F, 0.0F, 10000.0F);
         ImGui::DragFloat("Frequencey - 2", &freq2, 0.01F, 0.0F, 10000.0F);
-        ImGui::DragFloat("Amplitude - 2", &amp2, 0.01F, -10000.0F, 10000.0F);
+        ImGui::DragFloat("Amplitude - 2", &amp2, 0.01F, 0.0F, 10000.0F);
         ImGui::End();
 
         for (std::size_t x = 0; x != resolution.x; ++x) {
             float n1 = (noise.noiseFunc(static_cast<float>(x) / static_cast<float>(resolution.x),
                                         freq1, amp1) +
-                        1.0F) /
+                        amp1) /
                        2.0F;
             float n2 = (noise.noiseFunc(static_cast<float>(x) / static_cast<float>(resolution.x),
                                         freq2, amp2) +
-                        1.0F) /
+                        amp2) /
                        2.0F;
             updatePos(x, {0.0F, n1 + n2});
+            sf::Uint8 r = static_cast<std::uint8_t>(((n1 + n2) / (amp1 + amp2)) * 255.0F);
+            sf::Uint8 g = 255 - r;
+            updateColor(x, {r, g, 0});
         }
     }
 
