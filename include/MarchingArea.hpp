@@ -49,20 +49,23 @@ class MarchingArea {
     void updateImage() {
         for (unsigned y = 0; y != resolution.y; ++y) {
             for (unsigned x = 0; x != resolution.x; ++x) {
-                sf::Uint8 v =
-                    static_cast<std::uint8_t>(((points[x + y * resolution.x] + maxAmp) * 255.0F / (2.0F * maxAmp)));
+                sf::Uint8 v = static_cast<std::uint8_t>(
+                    ((points[x + y * resolution.x] + maxAmp) * 255.0F / (2.0F * maxAmp)));
+                v = (v < 128) ? 0 : 255;
                 image.setPixel(x, y, sf::Color{v, v, v});
             }
         }
     }
 
     void updateNoise() {
-        static float       freq     = 20.0F;
+        static Vec2F       offset;
+        static float       freq     = 2.5F;
         static float       amp      = 2.0F;
         static float       freqMult = 2.5F;
         static float       ampMult  = 0.3F;
         static std::size_t layers   = 1;
         ImGui::Begin("Noise");
+        ImGui::DragFloat2("Offset", &offset.x, 0.01F, -10000.0F, 10000.0F);
         ImGui::DragFloat("Freq", &freq, 0.01F, 0.0F, 10000.0F);
         ImGui::DragFloat("Amp", &amp, 0.01F, 0.0F, 10000.0F);
         ImGui_DragUnsigned("Layers", &layers, 1.0F, 1, 4);
@@ -78,8 +81,9 @@ class MarchingArea {
 
         for (std::size_t y = 0; y != resolution.y; ++y) {
             for (std::size_t x = 0; x != resolution.x; ++x) {
-                Vec2F input(static_cast<float>(x) / static_cast<float>(resolution.x),
-                            static_cast<float>(y) / static_cast<float>(resolution.y));
+                Vec2F input = Vec2F(static_cast<float>(x) / static_cast<float>(resolution.x),
+                                    static_cast<float>(y) / static_cast<float>(resolution.y)) +
+                              offset;
                 points[x + y * resolution.x] =
                     noise.fractcalNoise(input, freq, amp, layers, freqMult, ampMult);
             }

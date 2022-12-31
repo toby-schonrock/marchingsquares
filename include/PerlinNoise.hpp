@@ -89,7 +89,7 @@ class PerlinNoise2D {
     static float fade(float t) { return t * t * t * (t * (t * 6.0F - 15.0F) + 10.0F); }
 
     Vec2F grad(Vec2F p) const {
-        Vec2F value = NearestNeighbourAccess(p) - avgColor;
+        Vec2F value = NearestNeighbourAccess(p) - avgColor; // give vectors in negative directions aswell
         return value.norm();
     }
 
