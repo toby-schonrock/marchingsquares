@@ -5,7 +5,11 @@
 #include "Vector2.hpp"
 #include "imgui.h"
 
-sf::Vector2f visualize(const Vec2& v);
+template <typename To, typename From>
+Vector2<To> unvisualize(const sf::Vector2<From>& v);
+
+template <typename To, typename From>
+sf::Vector2<To> visualize(const Vector2<From>& v);
 
 bool ImGui_DragUnsigned(const char* label, std::size_t* v, float v_speed = 1.0f,
                         std::uint32_t v_min = 0, std::uint32_t v_max = 0, const char* format = "%d",
@@ -91,7 +95,7 @@ class MarchingArea {
         ImGui::Begin("Noise");
         ImGui::DragFloat("Freq", &freq, 0.01F, 0.0F, 10000.0F);
         ImGui::DragFloat("Amp", &amp, 0.01F, 0.0F, 10000.0F);
-        ImGui_DragUnsigned("Layers", &layers, 1.0F, 0, 10);
+        ImGui_DragUnsigned("Layers", &layers, 1.0F, 0, 4);
         ImGui::DragFloat("FreqMult", &freqMult, 0.01F, 0.0F, 10000.0F);
         ImGui::DragFloat("AmpMult", &ampMult, 0.01F, 0.0F, 1.0F);
         ImGui::End();

@@ -64,7 +64,7 @@ target_link_libraries(imgui-sfml INTERFACE ImGui-SFML sfml imgui)
 
 
 find_package(Threads REQUIRED)
-add_executable(SFMLProj app/main.cpp)
+add_executable(SFMLProj app/interpTest.cpp)
 target_include_directories(SFMLProj PRIVATE include)
 target_link_libraries(SFMLProj PRIVATE imgui-sfml ${PROJECT_STATIC_OPTIONS})
 target_compile_options(SFMLProj PRIVATE ${PROJECT_COMPILE_OPTIONS})

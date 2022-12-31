@@ -17,21 +17,21 @@ class Vector2 {
 
     constexpr T       mag() const { return std::hypot(x, y); }
     constexpr Vector2 norm() const { return *this / this->mag(); }
-    constexpr double  dot(const Vector2& rhs) const { return x * rhs.x + y * rhs.y; }
-    constexpr double  cross(const Vector2& rhs) const { return x * rhs.y - y * rhs.x; }
+    constexpr T  dot(const Vector2& rhs) const { return x * rhs.x + y * rhs.y; }
+    constexpr T  cross(const Vector2& rhs) const { return x * rhs.y - y * rhs.x; }
 
     // clang-format off
     constexpr Vector2& operator+=(const Vector2& obj) { x += obj.x; y += obj.y; return *this; }
     constexpr Vector2& operator-=(const Vector2& obj) { x -= obj.x; y -= obj.y; return *this; }
-    constexpr Vector2& operator*=(double scale) { x *= scale; y *= scale; return *this; }
-    constexpr Vector2& operator/=(double scale) { x /= scale; y /= scale; return *this; }
+    constexpr Vector2& operator*=(T scale) { x *= scale; y *= scale; return *this; }
+    constexpr Vector2& operator/=(T scale) { x /= scale; y /= scale; return *this; }
     // clang-format on
 
     constexpr friend Vector2 operator+(Vector2 lhs, const Vector2& rhs) { return lhs += rhs; }
     constexpr friend Vector2 operator-(Vector2 lhs, const Vector2& rhs) { return lhs -= rhs; }
-    constexpr friend Vector2 operator*(Vector2 lhs, double scale) { return lhs *= scale; }
-    constexpr friend Vector2 operator*(double scale, Vector2 rhs) { return rhs *= scale; }
-    constexpr friend Vector2 operator/(Vector2 lhs, double scale) { return lhs /= scale; }
+    constexpr friend Vector2 operator*(Vector2 lhs, T scale) { return lhs *= scale; }
+    constexpr friend Vector2 operator*(T scale, Vector2 rhs) { return rhs *= scale; }
+    constexpr friend Vector2 operator/(Vector2 lhs, T scale) { return lhs /= scale; }
 
     friend std::ostream& operator<<(std::ostream& os, const Vector2& v) {
         return os << '[' << v.x << ", " << v.y << ']';

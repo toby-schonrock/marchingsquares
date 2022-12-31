@@ -36,7 +36,33 @@ int main() {
     ImGuiIO& imguIO = ImGui::GetIO();
     imguIO.ConfigFlags &= ~ImGuiConfigFlags_NoMouseCursorChange; // disable cursor overide
 
-    MarchingArea area({}, {20.0F, 20.0F}, {1000, 2}, 0.01F);
+    PerlinNoise2D noise;
+
+    constexpr float radius = 0.1F;
+
+    std::vector<sf::CircleShape> circles;
+    circles.emplace_back(radius);
+    circles.emplace_back(radius);
+    circles.emplace_back(radius);
+    circles.emplace_back(radius);
+
+    circles[0].setPosition(0, 0); // top left
+    circles[1].setPosition(1, 0); // top right
+    circles[2].setPosition(1, 1); // bottom right
+    circles[3].setPosition(0, 1); // bottom left
+
+    sf::Color temp;
+    for (sf::CircleShape& c: circles) {
+        c.setOrigin(radius, radius);
+        temp = noise.randNoise.getPixel(static_cast<unsigned>(c.getPosition().x),
+                                        static_cast<unsigned>(c.getPosition().y));
+        temp = sf::Color(temp.r, temp.g, 0, 255);
+        c.setFillColor(temp);
+    }
+
+    // test point
+    sf::CircleShape test(radius);
+    test.setOrigin(radius, radius);
 
     sf::Clock
         deltaClock; // for imgui - read https://eliasdaler.github.io/using-imgui-with-sfml-pt1/
@@ -57,12 +83,18 @@ int main() {
 
         ImGui::SFML::Update(window, deltaClock.restart()); // required for imgui-sfml
 
-        area.updateNoise();
-
+        test.setPosition(window.mapPixelToCoords(mousePixPos));
+        Vec2F temp2 = noise.NearestNeighbourAccess(unvisualize<float>(test.getPosition()));
+        ImGui::SetTooltip("(%f, %f)", temp2.x, temp2.y);
+        test.setFillColor(
+            {static_cast<std::uint8_t>(temp2.x), static_cast<std::uint8_t>(temp2.y), 0, 255});
         // draw
         window.clear();
 
-        area.draw(window);
+        for (const sf::CircleShape& c: circles) {
+            window.draw(c);
+        }
+        window.draw(test);
         gui.frame(mousePixPos);
 
         ImGui::SFML::Render(window);
