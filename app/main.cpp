@@ -41,7 +41,7 @@ int main() {
     ImGuiIO& imguIO = ImGui::GetIO();
     imguIO.ConfigFlags &= ~ImGuiConfigFlags_NoMouseCursorChange; // disable cursor overide
 
-    MarchingArea area({}, {20.0F, 20.0F}, {100, 100}, 0.1F);
+    MarchingArea area({}, {20.0F, 20.0F}, {1000, 2}, 0.01F);
 
     sf::Clock
         deltaClock; // for imgui - read https://eliasdaler.github.io/using-imgui-with-sfml-pt1/
@@ -61,6 +61,8 @@ int main() {
         }
 
         ImGui::SFML::Update(window, deltaClock.restart()); // required for imgui-sfml
+
+        area.updateNoise();
 
         // draw
         window.clear();
